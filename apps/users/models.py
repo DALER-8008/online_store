@@ -7,15 +7,15 @@ from apps.utils import validators
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, phone, password, **extra_fields):
+    def create_user(self, phone, email, password, **extra_fields):
         email = self.normalize_email(email)
-        user = self.model(email=email, phone=phone, **extra_fields)
+        user = self.model(phone=phone, email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, phone, password, **extra_fields):
-        user = self.create_user(email, phone, password, **extra_fields)
+    def create_superuser(self, phone, email, password, **extra_fields):
+        user = self.create_user(phone, email, password, **extra_fields)
         user.is_active = True
         user.is_staff = True
         user.is_superuser = True
@@ -25,14 +25,14 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     username = None
-    email = models.CharField(_('email address'), unique=True)
+    email = models.EmailField(_('email address'), blank=True, unique=True)
     phone = models.CharField(_('phone number'), max_length=15, unique=True, validators=[validators.phone_validator])
     is_merchant = models.BooleanField(default=False)
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['email', 'phone']
+    USERNAME_FIELD = 'phone'
+    REQUIRED_FIELDS = ['email']
 
     class Meta(AbstractUser.Meta):
         app_label = 'users'

@@ -27,7 +27,6 @@ class Category(shared.SlugBasedModel):
 
 
 class Product(shared.BaseModel, shared.SlugBasedModel):
-    # TODO: type product field and ikpu field
     store = models.ForeignKey('store.Store', on_delete=models.CASCADE, related_name='products')
     category = models.ForeignKey('products.Category', on_delete=models.CASCADE, related_name='products')
     brand = models.ForeignKey('products.Brand', on_delete=models.CASCADE, related_name='products')
